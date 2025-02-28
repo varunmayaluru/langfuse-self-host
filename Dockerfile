@@ -4,7 +4,7 @@ FROM langfuse/langfuse:2
 # Expose the necessary port
 EXPOSE 3000
 
-# Set environment variables (optional, can be set in Railway Dashboard)
+# Set environment variables
 ENV DATABASE_URL=postgresql://neondb_owner:npg_MrVUW0A1kISO@ep-dark-bush-a4rxk4t0-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
 ENV NEXTAUTH_SECRET=mysecret
 ENV SALT=mysalt
@@ -24,5 +24,14 @@ ENV LANGFUSE_INIT_USER_PASSWORD=${LANGFUSE_INIT_USER_PASSWORD:-}
 ENV PORT=3000
 ENV HOST=0.0.0.0
 
-# Start the application - Bypassing Turbo
-CMD ["node", "packages/web/.next/standalone/server.js"]
+# Change to the web package directory and build Next.js
+WORKDIR /app/packages/web
+
+# Ensure dependencies are installed
+RUN npm install
+
+# Build the Next.js application
+RUN npm run build
+
+# Start the server using the correct path
+CMD ["node", "/app/packages/web/.next/standalone/server.js"]
