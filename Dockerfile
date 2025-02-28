@@ -24,5 +24,5 @@ ENV LANGFUSE_INIT_USER_PASSWORD=${LANGFUSE_INIT_USER_PASSWORD:-}
 ENV PORT=3000
 ENV HOST=0.0.0.0
 
-# Start the application
-CMD ["npm", "run", "start"]
+# Start the application - Bypassing Turbo
+CMD ["node", "packages/web/.next/standalone/server.js"]
