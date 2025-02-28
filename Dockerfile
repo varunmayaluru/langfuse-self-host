@@ -4,10 +4,11 @@ FROM langfuse/langfuse:2
 # Expose the informational port (Render will override this at runtime)
 EXPOSE 3000
 
-# Copy the entrypoint script
+# Copy the entrypoint script and ensure it’s executable
 COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Set the default environment (other env variables remain as is)
+# Set environment variables
 ENV DATABASE_URL="postgresql://neondb_owner:npg_MrVUW0A1kISO@ep-dark-bush-a4rxk4t0-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require" \
     NEXTAUTH_SECRET="mysecret" \
     SALT="mysalt" \
@@ -26,5 +27,7 @@ ENV DATABASE_URL="postgresql://neondb_owner:npg_MrVUW0A1kISO@ep-dark-bush-a4rxk4
     LANGFUSE_INIT_USER_PASSWORD="" \
     HOST="0.0.0.0"
 
-# Use the entrypoint script, and let the base image's CMD run as usual
+# Use the entrypoint script, which exports runtime variables
 ENTRYPOINT ["/entrypoint.sh"]
+
+# Do not override the CMD. Let the base image's CMD start the server.
